@@ -1,0 +1,21 @@
+doctype xml
+service-task-definition
+  label Google Spreadsheets value update
+  label(locale="ja") Google Spreadsheets セル値の更新
+  summary summary
+  summary(locale="ja") summary
+  last-modified 2018-09-28
+  help-page-ur https://
+  help-page-url(locale="ja") https://
+  configs
+    config(name="xmlUrl" required="true" form-type="SELECT" select-data-type="STRING_TEXTFIELD")
+      label ServiceTask XML URL
+      label(locale="ja") ServiceTask XML URL
+  script <![CDATA[
+    |
+    |
+    include script.min.js
+    |
+    |]]>
+  icon
+    include code.icon

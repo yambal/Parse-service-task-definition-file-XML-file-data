@@ -1,0 +1,64 @@
+doctype xml
+service-task-definition
+  label Parse service task definition file (XML) file-data
+  label(locale="ja") サービスタスク定義ファイル(XML)をパースする ファイル型データ項目
+  summary Parse the service task definition file (XML) and store each value. Detects missing settings.
+  summary(locale="ja") サービスタスク定義ファイル(XML)をパースして、各値を格納します。設定が不足している事項を検出します。
+  last-modified 2018-09-28
+  help-page-ur https://
+  help-page-url(locale="ja") https://
+  configs
+    //-config(name="xmlUrl" required="true" form-type="SELECT" select-data-type="STRING_TEXTFIELD")
+    //-  label ServiceTask XML URL
+    //-  label(locale="ja") ServiceTask XML URL
+    config(name="xmlFile" required="true" form-type="SELECT" select-data-type="FILE")
+      label ServiceTask XML File
+      label(locale="ja") ServiceTask XML File
+    config(name="labelServiceTask_Ja" form-type="SELECT" select-data-type="STRING_TEXTFIELD")
+      label name of the service task definition (Ja)
+      label(locale="ja") サービスタスク定義の名前を格納する文字型データ項目 (日)
+    config(name="labelServiceTask_En" form-type="SELECT" select-data-type="STRING_TEXTFIELD")
+      label name of the service task definition (En)
+      label(locale="ja") サービスタスク定義の名前を格納する文字型データ項目 (英)
+    config(name="Summary_Ja" form-type="SELECT" select-data-type="STRING_TEXTAREA")
+      label summary of the service task definition (Ja)
+      label(locale="ja") サービスタスク定義の概要を格納する文字型データ項目 (日)
+    config(name="Summary_En" form-type="SELECT" select-data-type="STRING_TEXTAREA")
+      label summary of the service task definition (En)
+      label(locale="ja") サービスタスク定義の概要を格納する文字型データ項目 (英)
+    config(name="LastModified" form-type="SELECT" select-data-type="DATE")
+      label Date type data item that stores the last update date
+      label(locale="ja") 最終更新日を格納する日付型データ項目
+    config(name="HelpPageUrl_Ja" form-type="SELECT" select-data-type="STRING_TEXTFIELD")
+      label Help Page URL (Ja)
+      label(locale="ja") ヘルプページのURL (日)
+    config(name="HelpPageUrl_En" form-type="SELECT" select-data-type="STRING_TEXTFIELD")
+      label Help Page URL (En)
+      label(locale="ja") ヘルプページのURL (英)
+    config(name="ConfList" form-type="SELECT" select-data-type="STRING_TEXTAREA")
+      label Analysis result of Config
+      label(locale="ja") Config の解析結果
+    config(name="Icon" form-type="SELECT" select-data-type="STRING_TEXTAREA")
+      label Icon Data
+      label(locale="ja") Icon データ
+    config(name="Warning" form-type="SELECT" select-data-type="STRING_TEXTAREA")
+      label Warning
+      label(locale="ja") 注意
+    config(name="JSON" form-type="SELECT" select-data-type="STRING_TEXTAREA")
+      label Perth result JSON
+      label(locale="ja") パース結果のJSON
+    config(name="XML" form-type="SELECT" select-data-type="STRING_TEXTAREA")
+      label Imported XML
+      label(locale="ja") 読み込んだ XML
+  script <![CDATA[
+    |
+    | /**
+    |  * Service-Task-Xml-Parser : https://github.com/yambal/Service-Task-Xml-Parser
+    |  * Script-Task-Utility : https://github.com/yambal/Script-Task-Utility
+    |  **/
+    |
+    include script.min.js
+    |
+    |]]>
+  icon
+    include code.icon
