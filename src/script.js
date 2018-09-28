@@ -549,7 +549,7 @@ function servicetaskXmlChecker(servicetaskJson, checkHelpUrl) {
       warning.push("概要説明 <summary>(日英) が指定されていません");
     } else {
         if (!servicetaskJson.summaries.ja) {
-            warning.push('概要説明 <summarylocale="ja">(日本語) が指定されていません');
+            warning.push('概要説明 <summary locale="ja">(日本語) が指定されていません');
         }
         if (!servicetaskJson.summaries.en) {
             warning.push("概要説明 <summary>(英語) が指定されていません");
