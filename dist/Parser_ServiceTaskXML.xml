@@ -5,8 +5,8 @@
   <summary>Parse the service task definition file (XML) and store each value. Detects missing settings.</summary>
   <summary locale="ja">サービスタスク定義ファイル(XML)をパースして、各値を格納します。設定が不足している事項を検出します。</summary>
   <last-modified>2018-09-28</last-modified>
-  <help-page-ur>https://</help-page-ur>
-  <help-page-url locale="ja">https://</help-page-url>
+  <help-page-ur>https://github.com/yambal/Parse-service-task-definition-file-XML-file-data</help-page-ur>
+  <help-page-url locale="ja">https://github.com/yambal/Parse-service-task-definition-file-XML-file-data</help-page-url>
   <configs>
     <config name="xmlFile" required="true" form-type="SELECT" select-data-type="FILE">
       <label>ServiceTask XML File</label>
