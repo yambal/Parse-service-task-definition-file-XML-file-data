@@ -414,6 +414,7 @@ function servicetaskXmlParser(servicetaskXml) {
         // ハイフン付きタグネームはパースできないみたい
         servicetaskXml = servicetaskXml.replace(/last-modified/gi, "lastmodified");
         servicetaskXml = servicetaskXml.replace(/help-page-url/gi, "helppageurl");
+        servicetaskXml = servicetaskXml.replace(/engine-type/gi, "enginetype");
 
         var parser = new DomParser();
         var dom = parser.parseFromString(servicetaskXml, "text/xml");
@@ -423,36 +424,40 @@ function servicetaskXmlParser(servicetaskXml) {
         var congigLabelTexts = [];
         var configs = {};
         var configsDom = dom.getElementsByTagName("configs");
-        for (var i = 0; i < configsDom[0].childNodes.length; i++) {
-            var n = configsDom[0].childNodes[i];
-            var nn = n.nodeName;
-            if (nn.toLowerCase() == "config") {
-                // configs > config
-                var configName = gatNodeAttr(n, "name", null);
-                if (!configs[configName]) {
-                    configs[configName] = {};
-                }
-
-                configs[configName].required =
-                    gatNodeAttr(n, "required", "false") == "true";
-                configs[configName].elEnabled =
-                    gatNodeAttr(n, "el-enabled", "false") == "true";
-                configs[configName].formType = gatNodeAttr(n, "form-type", null);
-                configs[configName].selectDataTypes = gatNodeAttr(
-                    n,
-                    "select-data-type",
-                    ""
-                ).split("|");
-
-                var labels = n.getElementsByTagName("label");
-                for (var ii = 0; ii < labels.length; ii++) {
-                    var locale = gatNodeAttr(labels[ii], "locale", "en");
-                    var labelText = labels[ii].textContent;
-                    if (!configs[configName].labels) {
-                        configs[configName].labels = {};
+        if(configsDom && configsDom[0] && configsDom[0].childNodes){
+            for (var i = 0; i < configsDom[0].childNodes.length; i++) {
+                var n = configsDom[0].childNodes[i];
+                var nn = n.nodeName;
+                if (nn.toLowerCase() == "config") {
+                    // configs > config
+                    var configName = gatNodeAttr(n, "name", null);
+                    if (!configs[configName]) {
+                        configs[configName] = {};
                     }
-                    configs[configName].labels[locale] = labelText;
-                    congigLabelTexts.push(labelText);
+
+                    configs[configName].required =
+                        gatNodeAttr(n, "required", "false") == "true";
+                    configs[configName].elEnabled =
+                        gatNodeAttr(n, "el-enabled", "false") == "true";
+                    configs[configName].formType = gatNodeAttr(n, "form-type", null);
+                    configs[configName].selectDataTypes = gatNodeAttr(
+                        n,
+                        "select-data-type",
+                        ""
+                    ).split("|");
+
+                    var labels = n.getElementsByTagName("label");
+                    for (var ii = 0; ii < labels.length; ii++) {
+                        var locale = gatNodeAttr(labels[ii], "locale", "en");
+                        if(labels[ii] && labels[ii].textContent){
+                            var labelText = labels[ii].textContent;
+                            if (!configs[configName].labels) {
+                                configs[configName].labels = {};
+                            }
+                            configs[configName].labels[locale] = labelText;
+                            congigLabelTexts.push(labelText);
+                        }
+                    }
                 }
             }
         }
@@ -462,13 +467,15 @@ function servicetaskXmlParser(servicetaskXml) {
         var addonNameLabels = {};
         var labelDom = dom.getElementsByTagName("label");
         for (var i = 0; i < labelDom.length; i++) {
-            var labelText = labelDom[i].textContent;
 
-            if (congigLabelTexts.indexOf(labelText) == -1) {
-                // どうしても Config 配下の label と区別して抽出できない
-                // config/label の text は サービスタスク名と同じものはない、として抽出
-                var locale = gatNodeAttr(labelDom[i], "locale", "en");
-                addonNameLabels[locale] = labelText;
+            if(labelDom[i] && labelDom[i].textContent){
+                var labelText = labelDom[i].textContent;
+                if (congigLabelTexts.indexOf(labelText) == -1) {
+                    // どうしても Config 配下の label と区別して抽出できない
+                    // config/label の text は サービスタスク名と同じものはない、として抽出
+                    var locale = gatNodeAttr(labelDom[i], "locale", "en");
+                    addonNameLabels[locale] = labelText;
+                }
             }
         }
 
@@ -477,17 +484,21 @@ function servicetaskXmlParser(servicetaskXml) {
         var summaryDom = dom.getElementsByTagName("summary");
         for (var i = 0; i < summaryDom.length; i++) {
             var locale = gatNodeAttr(summaryDom[i], "locale", "en");
-            summaries[locale] = summaryDom[i].textContent;
+            if(summaryDom[i] && summaryDom[i].textContent){
+                summaries[locale] = summaryDom[i].textContent;
+            }
         }
 
         // - - - - - - - - - - - - - - - -
         var lastModifiedDate;
         var lastModified;
         var lastModifiedDom = dom.getElementsByTagName("lastmodified");
+
         if (lastModifiedDom) {
-            lastModified = lastModifiedDom[0].textContent;
-            lastModifiedDate = Date.parse(lastModifiedDom[0].textContent);
-            //engine.log(lastModifiedDate);
+            if(lastModifiedDom[0] && lastModifiedDom[0].textContent){
+                lastModified = lastModifiedDom[0].textContent;
+                lastModifiedDate = Date.parse(lastModifiedDom[0].textContent);
+            }
         }
 
         // - - - - - - - - - - - - - - - -
@@ -495,7 +506,16 @@ function servicetaskXmlParser(servicetaskXml) {
         var helppageUrlDom = dom.getElementsByTagName("helppageurl");
         for (var i = 0; i < helppageUrlDom.length; i++) {
             var locale = gatNodeAttr(helppageUrlDom[i], "locale", "en");
-            helpUrls[locale] = helppageUrlDom[i].textContent;
+            if(helppageUrlDom[i] && helppageUrlDom[i].textContent){
+                helpUrls[locale] = helppageUrlDom[i].textContent;
+            }
+            
+        }
+
+        var engineType = null;
+        var engineTypeDom = dom.getElementsByTagName("enginetype");
+        if (engineTypeDom && engineTypeDom[0] && engineTypeDom[0].textContent){
+            engineType = parseInt(engineTypeDom[0].textContent, 10)
         }
 
         // - - - - - - - - - - - - - - - -
@@ -508,7 +528,7 @@ function servicetaskXmlParser(servicetaskXml) {
         // - - - - - - - - - - - - - - - -
         var iconBase64;
         var iconNodes = dom.getElementsByTagName("icon");
-        if (iconNodes) {
+        if (iconNodes && iconNodes[0] && iconNodes[0].textContent) {
             iconBase64 = iconNodes[0].textContent;
         }
 
@@ -520,7 +540,8 @@ function servicetaskXmlParser(servicetaskXml) {
             lastModified: lastModified,
             lastModifiedDate: lastModifiedDate,
             script: script,
-            iconBase64: iconBase64
+            iconBase64: iconBase64,
+            engineType : engineType
         };
 
         res.warning = servicetaskXmlChecker(res);
@@ -590,6 +611,10 @@ function servicetaskXmlChecker(servicetaskJson, checkHelpUrl) {
 
     if (!servicetaskJson.iconBase64) {
         warning.push("アイコン <icon> が指定されていません");
+    }
+
+    if (!servicetaskJson.engineType) {
+        warning.push("<engine-type> が指定されていません");
     }
 
     var hasWarning = false;
