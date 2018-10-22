@@ -613,7 +613,7 @@ function servicetaskXmlChecker(servicetaskJson, checkHelpUrl) {
         warning.push("アイコン <icon> が指定されていません");
     }
 
-    if (!servicetaskJson.engineType) {
+    if (typeof servicetaskJson.engineType !== "number") {
         warning.push("<engine-type> が指定されていません");
     }
 
